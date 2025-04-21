@@ -9,14 +9,14 @@ import os
 from streamlit_sortables import sort_items
 
 # --- Custom Colors ---
-BACKGROUND_COLOR = "#FDF6F6"   # Black background
-BUTTON_COLOR = "#002C54"       # Deep Blue
-TEXT_COLOR = "#000000"         # White text
+BACKGROUND_COLOR = "#FDF6F6"   # Background
+BUTTON_COLOR = "#002C54"
+TEXT_COLOR = "#000000"
 
 EMPLOYEE_FILE = "employees.txt"
 
 # --- Page Setup ---
-st.set_page_config(page_title="📅 Modern Schedule Builder", page_icon="📅", layout="centered")
+st.set_page_config(page_title="📅 Schedule Builder", page_icon="📅", layout="centered")
 
 # --- Custom Styling ---
 st.markdown(
@@ -109,7 +109,7 @@ if "employees" not in st.session_state:
     st.session_state.employees = load_employees()
 
 # --- App Title ---
-st.markdown(f"<h1 style='text-align: center; color: {TEXT_COLOR};'>📅 Modern Schedule Builder</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {TEXT_COLOR};'>📅 Schedule Builder</h1>", unsafe_allow_html=True)
 
 # --- Employee Manager ---
 st.markdown(f"<h3 style='color: {TEXT_COLOR};'>Employee List:</h3>", unsafe_allow_html=True)
@@ -119,7 +119,7 @@ new_order = sort_items(st.session_state.employees, direction="vertical")
 if new_order != st.session_state.employees:
     st.session_state.employees = new_order
     save_employees(st.session_state.employees)
-    st.success("✅ Employee list reordered!")
+    st.success("Employee list reordered!")
     st.rerun()
 
 # --- Add New Employee ---
@@ -131,7 +131,7 @@ if st.button("Add Employee"):
         if new_employee.strip() not in st.session_state.employees:
             st.session_state.employees.append(new_employee.strip())
             save_employees(st.session_state.employees)
-            st.success(f"✅ {new_employee} added successfully.")
+            st.success(f"{new_employee} added successfully.")
             st.rerun()
         else:
             st.warning("⚠️ This employee already exists!")
@@ -149,12 +149,10 @@ if st.button("Remove Selected"):
         updated_list = [emp for emp in st.session_state.employees if emp not in remove_selected]
         st.session_state.employees = updated_list
         save_employees(updated_list)
-        st.success("✅ Selected employee(s) removed successfully.")
-
-        # Just rerun, don't try to reset manually
+        st.success("Selected employee(s) removed successfully.")
         st.rerun()
     else:
-        st.warning("No employee selected for removal.")
+        st.warning("⚠️ No employee selected for removal.")
 
 # --- Divider ---
 st.markdown("---")
@@ -165,7 +163,7 @@ st.markdown(f"<h3 style='color: {TEXT_COLOR};'>Select Starting Monday:</h3>", un
 selected_date = st.date_input("Pick a date", value=datetime.today())
 
 if selected_date.weekday() != 0:
-    st.warning("Selected date is not a Monday. It will adjust automatically.")
+    st.warning("⚠️ Selected date is not a Monday. It will adjust automatically.")
 
 if st.button("Generate Schedule"):
     if not st.session_state.employees:
