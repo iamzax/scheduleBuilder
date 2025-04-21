@@ -124,14 +124,24 @@ if new_order != st.session_state.employees:
 
 # --- Add New Employee ---
 st.markdown(f"<h4 style='color: {TEXT_COLOR};'>Add a New Employee:</h4>", unsafe_allow_html=True)
-new_employee = st.text_input(label=" ", placeholder="Type name and press Enter")
+
+st.text_input(
+    label=" ",
+    placeholder="Type name and press Enter",
+    key="new_employee_input"
+)
 
 if st.button("Add Employee"):
-    if new_employee.strip():
-        if new_employee.strip() not in st.session_state.employees:
-            st.session_state.employees.append(new_employee.strip())
+    new_employee = st.session_state.get("new_employee_input", "").strip()
+    if new_employee:
+        if new_employee not in st.session_state.employees:
+            st.session_state.employees.append(new_employee)
             save_employees(st.session_state.employees)
             st.success(f"{new_employee} added successfully.")
+
+            # Clear the input box after addition
+            st.session_state.new_employee_input = ""
+
             st.rerun()
         else:
             st.warning("⚠️ This employee already exists!")
