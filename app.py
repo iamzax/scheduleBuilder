@@ -93,7 +93,9 @@ def autofit_excel(workbook):
                     max_length = max(max_length, longest_line)
                 else:
                     max_length = max(max_length, len(cell_value))
-        adjusted_width = (max_length + 2)
+        
+        # --- SETTING MINIMUM COLUMN WIDTH TO 50
+        adjusted_width = max(max_length + 2, 15)
         ws.column_dimensions[column].width = adjusted_width
 
     for row in ws.iter_rows():
@@ -102,7 +104,15 @@ def autofit_excel(workbook):
             alignment.wrap_text = True
             cell.alignment = alignment
             cell.border = thin_border
-        ws.row_dimensions[row[0].row].height = 30
+        # No need to touch row height anymore!
+    
+    # Set narrow margins
+    ws.page_margins.left = 0.25
+    ws.page_margins.right = 0.25
+    ws.page_margins.top = 0.25
+    ws.page_margins.bottom = 0.25
+    ws.page_margins.header = 0.1
+    ws.page_margins.footer = 0.1
 
 # --- Load Employee Data ---
 if "employees" not in st.session_state:
@@ -187,6 +197,11 @@ if st.button("Generate Schedule"):
 
         # Apply Formatting
         autofit_excel(wb)
+
+        # Set Landscape Layout
+        ws = wb.active
+        ws.page_setup.orientation = ws.ORIENTATION_LANDSCAPE
+        ws.page_setup.paperSize = ws.PAPERSIZE_LETTER 
 
         final_output = BytesIO()
         wb.save(final_output)
